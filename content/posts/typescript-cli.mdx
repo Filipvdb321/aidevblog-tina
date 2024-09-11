@@ -1,0 +1,150 @@
+---
+title: "Hoe Maak Je Een TypeScript CLI-Tool: Een Stapsgewijze Gids"
+heroImg: 
+excerpt: >
+  Leer hoe je een TypeScript CLI-tool kunt maken en uitvoeren met behulp van ECMAScript Modules. Inclusief stap-voor-stap uitleg en codevoorbeelden.
+author: content/authors/fvb.md
+date: 2024-09-11T07:00:00.000Z
+tags:
+  - typescript
+  - cli
+  - development
+  - programming
+  - tutorials
+---
+
+Het maken van een CLI-tool (Command Line Interface) met TypeScript biedt ontwikkelaars een krachtige manier om scripts en tools te bouwen met type safety en moderne JavaScript-functionaliteiten. In deze post leer je hoe je een TypeScript CLI-tool kunt bouwen, configureren, en uitvoeren met behulp van ECMAScript Modules (ESM).
+
+## Projectstructuur
+
+Laten we beginnen met het opzetten van de projectstructuur. Dit is hoe je project eruit zou kunnen zien:
+
+```plaintext
+/my-cli-project
+|-- /src
+|   |-- index.ts       # Je TypeScript entry point voor de CLI
+|-- /dist              # Output directory voor gecompileerde bestanden
+|-- package.json       # Project configuratiebestand
+|-- tsconfig.json      # TypeScript configuratiebestand
+```
+
+## Stap 1: `package.json` Instellen
+
+Begin met het configureren van je `package.json` voor een CLI-tool:
+
+```json
+{
+  "name": "my-cli-tool",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "./dist/index.mjs",
+  "bin": {
+    "my-cli": "./dist/index.mjs"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node ./dist/index.mjs",
+    "dev": "ts-node-esm src/index.ts"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "ts-node": "^10.0.0"
+  }
+}
+```
+
+### Uitleg:
+
+- **`bin`**: Dit attribuut definieert het uitvoerbare bestand dat zal worden gebruikt voor de CLI-tool.
+- **`scripts`**: De `build` script compileert TypeScript naar JavaScript, en `dev` gebruikt `ts-node` voor ontwikkeling.
+
+## Stap 2: TypeScript Configuratie (`tsconfig.json`)
+
+Je `tsconfig.json` moet de juiste configuraties bevatten voor een CLI-tool:
+
+```json
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "target": "ESNext",
+    "outDir": "./dist",
+    "strict": true,
+    "esModuleInterop": true,
+    "declaration": true,
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "**/*.spec.ts"]
+}
+```
+
+### Uitleg:
+
+- **`module`: "ESNext"** en **`moduleResolution`: "node"** zijn nodig om ECMAScript Modules correct te gebruiken.
+
+## Stap 3: Schrijf de CLI-tool (`src/index.ts`)
+
+Dit is een voorbeeld van een eenvoudige CLI-tool geschreven in TypeScript:
+
+```typescript
+#!/usr/bin/env node
+
+import { Command } from 'commander'; // CLI-tool bibliotheek zoals Commander.js gebruiken
+
+const program = new Command();
+
+program
+  .name('my-cli')
+  .description('Een voorbeeld CLI-tool in TypeScript')
+  .version('1.0.0');
+
+program
+  .command('say-hello')
+  .description('Print een hallo bericht')
+  .action(() => {
+    console.log('Hallo, wereld!');
+  });
+
+program.parse(process.argv); // Verwerk de argumenten van de commandoregel
+```
+
+### Uitleg:
+
+- De shebang (`#!/usr/bin/env node`) bovenaan het bestand zorgt ervoor dat het script als een uitvoerbaar bestand kan worden uitgevoerd in UNIX-achtige omgevingen.
+
+## Stap 4: CLI Bouwen en Uitvoeren
+
+Bouw het project met het volgende commando:
+
+```bash
+npm run build
+```
+
+Maak vervolgens de CLI-tool uitvoerbaar met:
+
+```bash
+npm link
+```
+
+Nu kun je de CLI-tool uitvoeren met het commando:
+
+```bash
+my-cli say-hello
+```
+
+Dit zou de output moeten geven:
+
+```plaintext
+Hallo, wereld!
+```
+
+## Conclusie
+
+Met deze stappen heb je succesvol een TypeScript CLI-tool gemaakt, geconfigureerd, en uitgevoerd met ECMAScript Modules. Door TypeScript te gebruiken, profiteer je van type safety en de nieuwste JavaScript-functionaliteiten. Experimenteer met meer commando's en functionaliteiten om je CLI-tool uit te breiden!
+
+Veel succes met het bouwen van je eigen CLI-tools in TypeScript!
+```
+
+Dit MDX-formaat bevat de nodige uitleg en codevoorbeelden om een TypeScript CLI-tool op te zetten en uit te voeren. Je kunt het direct gebruiken voor je blogpost.
